@@ -59,8 +59,7 @@ var keywords = map[string]TokenType{
 	"return": RETURN,
 }
 
-// LoopupIdentifier checks whether the identiier is a
-// variable or a keyword
+// LoopupIdentifier checks whether the identifier is a variable or a keyword
 func LoopupIdentifier(ident string) TokenType {
 	if tokenType, ok := keywords[ident]; ok {
 		return tokenType

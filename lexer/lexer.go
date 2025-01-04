@@ -5,16 +5,16 @@ package lexer
 import "github.com/DaveSaah/some/token"
 
 type Lexer struct {
-	input        string
-	position     int  // current character position in input
-	readPosition int  // next character position after current char in input
-	ch           byte // current character under examination
+	input          string
+	chPosition     int  // current character position in input
+	nextChPosition int  // next character position after current char in input
+	ch             byte // current character under examination
 }
 
 // New creates a new lexer from an input
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
-	l.readChar() // set l.ch to the first character
+	l.readNextChar() // set l.ch to the first character
 	return l
 }
 
@@ -26,25 +26,25 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 	}
 }
 
-// readChar reads a character from the lexer input
-func (l *Lexer) readChar() {
-	if l.readPosition >= len(l.input) {
+// readNextChar reads next character from the lexer input
+func (l *Lexer) readNextChar() {
+	if l.nextChPosition >= len(l.input) {
 		l.ch = 0 // set to ASCII NUL
 	} else {
-		l.ch = l.input[l.readPosition]
+		l.ch = l.input[l.nextChPosition]
 	}
 
-	l.position = l.readPosition
-	l.readPosition += 1
+	l.chPosition = l.nextChPosition
+	l.nextChPosition += 1
 }
 
 // peekChar checks the next character from the lexer input
 // without incrementing the readPosition
 func (l *Lexer) peekChar() byte {
-	if l.readPosition >= len(l.input) {
+	if l.nextChPosition >= len(l.input) {
 		return 0 // set to ASCII NUL
 	} else {
-		return l.input[l.readPosition]
+		return l.input[l.nextChPosition]
 	}
 }
 
@@ -59,7 +59,7 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peekChar() == '=' {
 			tok.Literal = "=="
 			tok.Type = token.EQUALS
-			l.readChar() // skip second token
+			l.readNextChar()
 		} else {
 			tok = newToken(token.ASSIGN, l.ch)
 		}
@@ -83,7 +83,7 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peekChar() == '=' {
 			tok.Literal = "!="
 			tok.Type = token.NOT_EQUALS
-			l.readChar() // skip second token
+			l.readNextChar()
 		} else {
 			tok = newToken(token.BANG, l.ch)
 		}
@@ -110,7 +110,7 @@ func (l *Lexer) NextToken() token.Token {
 		}
 	}
 
-	l.readChar()
+	l.readNextChar()
 	return tok
 }
 
@@ -124,16 +124,16 @@ func isDigit(ch byte) bool {
 
 // readIdentifierToken reads an identifier from a lexer's input string
 func (l *Lexer) readIdentifierToken() token.Token {
-	position := l.position // track current position
+	position := l.chPosition // track current position
 
 	// check if the identifier satisfies its rule:
 	// Can have a letter or digit
 	// keep skipping token until an unsatisfied token is reached.
 	for isLetter(l.ch) || isDigit(l.ch) {
-		l.readChar()
+		l.readNextChar()
 	}
 
-	literal := l.input[position:l.position]
+	literal := l.input[position:l.chPosition]
 	_type := token.LoopupIdentifier(literal)
 
 	return token.Token{
@@ -145,20 +145,20 @@ func (l *Lexer) readIdentifierToken() token.Token {
 // eatWhitespace removes all whitespaces in lexer's input
 func (l *Lexer) eatWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
-		l.readChar()
+		l.readNextChar()
 	}
 }
 
 // readNumberToken reads a number from a lexer's input string
 func (l *Lexer) readNumberToken() token.Token {
-	position := l.position
+	position := l.chPosition
 
 	for isDigit(l.ch) {
-		l.readChar()
+		l.readNextChar()
 	}
 
 	return token.Token{
 		Type:    token.INT,
-		Literal: l.input[position:l.position],
+		Literal: l.input[position:l.chPosition],
 	}
 }

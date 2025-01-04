@@ -8,7 +8,7 @@ import (
 )
 
 func TestNextTokenBasic(t *testing.T) {
-	input := "=+(){},;"
+	input := "=+(){},;-!*/<>"
 
 	tests := []struct {
 		expectedType    token.TokenType
@@ -22,6 +22,12 @@ func TestNextTokenBasic(t *testing.T) {
 		{token.RBRACE, "}"},
 		{token.COMMA, ","},
 		{token.SEMICOLON, ";"},
+		{token.MINUS, "-"},
+		{token.BANG, "!"},
+		{token.ASTERISK, "*"},
+		{token.SLASH, "/"},
+		{token.LESS_THAN, "<"},
+		{token.GREATER_THAN, ">"},
 	}
 
 	l := lexer.New(input)
