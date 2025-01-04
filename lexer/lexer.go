@@ -1,5 +1,5 @@
-// package lexer takes source code as input and outputs tokens that represents the
-// source code
+// package lexer takes source code as input and outputs tokens that represents
+// the source code
 package lexer
 
 import "github.com/DaveSaah/some/token"

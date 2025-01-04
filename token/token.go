@@ -1,5 +1,5 @@
-// package token defines small categorisable data structures that are
-// fed into a parser
+// package token defines small categorisable data structures that are fed into
+// a parser
 package token
 
 type TokenType string

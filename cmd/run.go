@@ -4,12 +4,33 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strings"
 
-	"github.com/DaveSaah/some/compile"
+	"github.com/DaveSaah/some/lexer"
+	"github.com/DaveSaah/some/token"
 	"github.com/spf13/cobra"
 )
+
+func run(filepath string) {
+	file, err := os.Open(filepath)
+	if err != nil {
+		panic(err)
+	}
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		l := lexer.New(line)
+
+		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
+			fmt.Printf("%+v\n", tok)
+		}
+	}
+}
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
@@ -22,7 +43,7 @@ var runCmd = &cobra.Command{
 			return fmt.Errorf("%s is not some file", filepath)
 		}
 
-		compile.Start(filepath)
+		run(filepath)
 		return nil
 	},
 }
