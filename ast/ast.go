@@ -51,3 +51,13 @@ func (ls *LetStmt) stmtNode() {}
 func (ls *LetStmt) TokenLiteral() string {
 	return ls.Token.Literal
 }
+
+type ReturnStmt struct {
+	Token token.Token // token.RETURN
+	Value Expression  // expression
+}
+
+func (rs *ReturnStmt) stmtNode() {}
+func (rs *ReturnStmt) TokenLiteral() string {
+	return rs.Token.Literal
+}

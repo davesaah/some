@@ -56,6 +56,8 @@ func (p *Parser) parseStmt() ast.Stmt {
 	switch p.curToken.Type {
 	case token.LET:
 		return p.parseLetStmt()
+	case token.RETURN:
+		return p.parseReturnStmt()
 	default:
 		return nil
 	}
@@ -87,6 +89,19 @@ func (p *Parser) parseLetStmt() ast.Stmt {
 	}
 
 	p.nextToken() // consume 'assign' token
+
+	// skip expressions
+	for p.curToken.Type != token.SEMICOLON {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseReturnStmt() ast.Stmt {
+	stmt := &ast.ReturnStmt{Token: p.curToken}
+
+	p.nextToken() // consume 'return' token
 
 	// skip expressions
 	for p.curToken.Type != token.SEMICOLON {
