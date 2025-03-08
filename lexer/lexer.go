@@ -59,7 +59,7 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peekChar() == '=' {
 			tok.Literal = "=="
 			tok.Type = token.EQUALS
-			l.readChar()
+			l.readChar() // skip second token
 		} else {
 			tok = newToken(token.ASSIGN, l.ch)
 		}
@@ -83,7 +83,7 @@ func (l *Lexer) NextToken() token.Token {
 		if l.peekChar() == '=' {
 			tok.Literal = "!="
 			tok.Type = token.NOT_EQUALS
-			l.readChar()
+			l.readChar() // skip second token
 		} else {
 			tok = newToken(token.BANG, l.ch)
 		}
@@ -100,12 +100,11 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
-			tok.Literal = l.readIdentifier()
-			tok.Type = token.LoopupIdentifier(tok.Literal)
-			return tok
+			tok = l.readIdentifierToken()
+			return tok // already skipped valid tokens
 		} else if isDigit(l.ch) {
 			tok = l.readNumberToken()
-			return tok
+			return tok // already skipped valid tokens
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
 		}
@@ -123,22 +122,24 @@ func isDigit(ch byte) bool {
 	return (ch >= '0' && ch <= '9')
 }
 
-// readIdentifier reads an identifier from a lexer's input string
-func (l *Lexer) readIdentifier() string {
+// readIdentifierToken reads an identifier from a lexer's input string
+func (l *Lexer) readIdentifierToken() token.Token {
 	position := l.position // track current position
-
-	// check if the first character is a letter
-	if isLetter(l.ch) {
-		l.readChar()
-	}
 
 	// check if the identifier satisfies its rule:
 	// Can have a letter or digit
+	// keep skipping token until an unsatisfied token is reached.
 	for isLetter(l.ch) || isDigit(l.ch) {
 		l.readChar()
 	}
 
-	return l.input[position:l.position]
+	literal := l.input[position:l.position]
+	_type := token.LoopupIdentifier(literal)
+
+	return token.Token{
+		Type:    _type,
+		Literal: literal,
+	}
 }
 
 // eatWhitespace removes all whitespaces in lexer's input
@@ -148,6 +149,7 @@ func (l *Lexer) eatWhitespace() {
 	}
 }
 
+// readNumberToken reads a number from a lexer's input string
 func (l *Lexer) readNumberToken() token.Token {
 	position := l.position
 
