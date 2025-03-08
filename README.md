@@ -1,12 +1,14 @@
 # some
 
+> ## 🚧 Work in Progress 🚧
+> This project is an ongoing effort to build a lightweight, tree-walking 
+> interpreter with a focus on efficiency, modularity, and usability. Current 
+> priorities include refining the execution model for better performance, 
+> improving AST traversal, and enhancing documentation to make the project more
+> accessible for learners and future contributors. Feedback and discussions are
+> welcome!
+
 ![some](https://github.com/user-attachments/assets/30efc279-dce1-4586-be6b-32ed81d7567e)
-
-**`some`** is a tree-walking interpreter I am building to see, understand and
-appreciate what happens when we run high-level programs.
-
-There is no special reason for calling my interpreter `some`;
-I choose it because I can :)
 
 ## Features (WIP)
 
