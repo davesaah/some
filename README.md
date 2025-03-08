@@ -1,5 +1,7 @@
 # some
 
+![some](https://github.com/user-attachments/assets/30efc279-dce1-4586-be6b-32ed81d7567e)
+
 > ## 🚧 Work in Progress 🚧
 > This project is an ongoing effort to build a lightweight, tree-walking 
 > interpreter with a focus on efficiency, modularity, and usability. Current 
@@ -8,9 +10,7 @@
 > accessible for learners and future contributors. Feedback and discussions are
 > welcome!
 
-![some](https://github.com/user-attachments/assets/30efc279-dce1-4586-be6b-32ed81d7567e)
-
-## Features (WIP)
+## Features
 
 - [ ] Simple syntax.
 - [ ] Variable bindings.
